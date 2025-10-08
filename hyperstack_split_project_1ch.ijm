@@ -118,7 +118,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		//run("Make Subset...", "channels=2 slices=1-5 frames=1-51");
 
 		// optional: create projection, all time frames
-		//selectImage(basename+"-1");
+		selectImage(serName+"-1"); // should be the subset
 		print("Z projecting");
 		run("Z Project...", "projection=[Max Intensity] all");
 		
@@ -128,7 +128,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		// note that if there is only one dimension besides C, the numbers will be sequential without identifying t or z
 		// if both t and z are present, then the slices and frames will be identified accordingly
 		//selectImage("MAX_" + basename + "-1");
-		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + basename + "]"+"_m" + padCount + "_c"+ channel+"_");
+		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + basename + "]_m" + padCount + "_c"+ channel+"_");
 			
 		run("Close All");
 		run("Collect Garbage"); // free up memory
