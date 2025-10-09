@@ -16,8 +16,8 @@
 
 // ---- Setup ----
 
-// TODO: fix failure to open each series
-// TODO: keep track of time elapsed
+// TODO: support multiple channels
+
 
 
 while (nImages>0) { // clean up open images
@@ -37,7 +37,9 @@ run("Bio-Formats Macro Extensions"); // enables access to macro commands
 filenum = -1;
 print("Starting");
 startTime = getTime();
+
 processFolder(inputdir, outputdir, fileSuffix, Channel); // actually do the processing
+
 endTime = getTime();
 elapsedTime = endTime - startTime;
 print("Finished in", elapsedTime/1000, "sec");
@@ -118,7 +120,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		//run("Make Subset...", "channels=2 slices=1-5 frames=1-51");
 
 		// optional: create projection, all time frames
-		selectImage(serName+"-1"); // should be the subset
+		//selectImage(serName+"-1"); // should be the subset
 		print("Z projecting");
 		run("Z Project...", "projection=[Max Intensity] all");
 		
@@ -128,7 +130,9 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		// note that if there is only one dimension besides C, the numbers will be sequential without identifying t or z
 		// if both t and z are present, then the slices and frames will be identified accordingly
 		//selectImage("MAX_" + basename + "-1");
-		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + basename + "]_m" + padCount + "_c"+ channel+"_");
+		saveName = basename + "_m" + padCount + "_c"+ channel+"_t";
+		print("Saving as",saveName);
+		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + saveName+"]");
 			
 		run("Close All");
 		run("Collect Garbage"); // free up memory
