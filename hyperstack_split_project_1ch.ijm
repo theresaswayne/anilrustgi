@@ -130,7 +130,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		// note that if there is only one dimension besides C, the numbers will be sequential without identifying t or z
 		// if both t and z are present, then the slices and frames will be identified accordingly
 		//selectImage("MAX_" + basename + "-1");
-		saveName = basename + "_m" + padCount + "_c"+ channel+"_t";
+		saveName = basename + "_max_m" + padCount + "_c"+ channel+"_t";
 		print("Saving as",saveName);
 		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + saveName+"]");
 			
