@@ -71,7 +71,7 @@ filenum = -1;
 print("Starting");
 startTime = getTime();
 
-processFolder(inputdir, outputdir, fileSuffix, Channel); // actually do the processing
+processFolder(inputdir, outputdir, fileSuffix, channelString); // actually do the processing
 
 endTime = getTime();
 elapsedTime = endTime - startTime;
@@ -103,7 +103,7 @@ function processFolder(input, output, extension, chan) {
 	
 // ------- Function for processing individual files
 
-function processImage(inputdir, name, outputdir, fileNumber, channel) {
+function processImage(inputdir, name, outputdir, fileNumber, channelString) {
 
 	imagePath = inputdir + File.separator + name;
 	print("Processing file",fileNumber," at path" ,imagePath);	
@@ -134,7 +134,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		Ext.getSizeT(frames);
 		print("The image has", channels, "channels,", slices, "slices, and",frames, "frames");
 		
-		if (channels < channel) {
+		if (channels < channelString) {
 			print("Invalid channel selection for", imagePath);
 			break; // to the next image file
 		}
@@ -149,7 +149,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		// make a substack with only the desired channel (this can take time because it must read from memory)
 		//run("Make Subset...", "channels="+channelString+" slices=1-"+slices+" frames=1-"+frames);
 		print("Making substack");
-		run("Make Subset...", "channels="+channel);
+		run("Make Subset...", "channels="+channelString);
 		//run("Make Subset...", "channels=2 slices=1-5 frames=1-51");
 
 		// optional: create projection, all time frames
@@ -163,7 +163,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channel) {
 		// note that if there is only one dimension besides C, the numbers will be sequential without identifying t or z
 		// if both t and z are present, then the slices and frames will be identified accordingly
 		//selectImage("MAX_" + basename + "-1");
-		saveName = basename + "_max_m" + padCount + "_c"+ channel+"_t";
+		saveName = basename + "_max_m" + padCount;
 		print("Saving as",saveName);
 		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + saveName+"]");
 			
