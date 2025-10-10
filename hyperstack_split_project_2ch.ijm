@@ -124,6 +124,7 @@ function processImage(inputdir, name, outputdir, fileNumber, channelString) {
 	
 	for (j=0; j<seriesCount; j++) {  // loop through series (multipoints)
   		print("Opening series",j+1);
+  		seriesStartTime = getTime();
   		Ext.setSeries(j) // internal series names start with 0 
   		Ext.getSeriesName(serName);
 		print("The series name is", serName);
@@ -151,12 +152,17 @@ function processImage(inputdir, name, outputdir, fileNumber, channelString) {
 		print("Making substack");
 		run("Make Subset...", "channels="+channelString);
 		//run("Make Subset...", "channels=2 slices=1-5 frames=1-51");
-
+		subsetEndTime = getTime();
+		subsetTime = subsetEndTime-seriesStartTime;
+		print("Made substack in", subsetTime/1000, "sec");
 		// optional: create projection, all time frames
 		//selectImage(serName+"-1"); // should be the subset
 		print("Z projecting");
 		run("Z Project...", "projection=[Max Intensity] all");
 		
+		projectEndTime = getTime();
+		seriesProjTime = projectEndTime-subsetEndTime;
+		print("Made projection in", seriesProjTime/1000, "sec");
 		// save as image sequence
 		print("splitting");
 
@@ -169,6 +175,9 @@ function processImage(inputdir, name, outputdir, fileNumber, channelString) {
 			
 		run("Close All");
 		run("Collect Garbage"); // free up memory
+        seriesEndTime = getTime();
+        seriesTime = seriesEndTime-seriesStartTime;
+        print("Processed series in", seriesTime/1000, "sec");
         
    		} // series loop
 	} // end processImage function
