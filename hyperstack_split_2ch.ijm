@@ -9,11 +9,12 @@
 // @Boolean(label="Channel 6") C6
 // @Boolean(label="Channel 7") C7
 
-//  ImageJ macro to save individual single channel Z projection images from hyperstacks (series, Z, and/or T), ignoring other channels
+//  ImageJ macro to save selected single channel Z/T slice images from hyperstacks (series, Z, and/or T), ignoring other channels
 //  Based on a macro by Martin Hoehne, August 2015
 //  Updated 2023, 2025, Theresa Swayne: use script parameters, use standard batch functions to process folder and image, save specific channels/Z
 //  Limitations: Supports up to 7 channels
 //  Note: The exported channels are renumbered according to their order in the substack, not the original channel number.
+
 
 //  -------- Suggested text for acknowledgement -----------
 //   "These studies used the Confocal and Specialized Microscopy Shared Resource 
@@ -58,7 +59,6 @@ for (i = 0; i < 7; i++) {
 	}
 print("The array of selected channels:");
 Array.print(selectedChannels);
-
 Array.getStatistics(selectedChannels, min, maxChannel, mean, stdDev);
 
 // convert the channel array into a string
@@ -158,21 +158,14 @@ function processImage(inputdir, name, outputdir, fileNumber, channelString) {
 		subsetEndTime = getTime();
 		subsetTime = subsetEndTime-seriesStartTime;
 		print("Made substack in", subsetTime/1000, "sec");
-		// optional: create projection, all time frames
-		//selectImage(serName+"-1"); // should be the subset
-		print("Z projecting");
-		run("Z Project...", "projection=[Max Intensity] all");
 		
-		projectEndTime = getTime();
-		seriesProjTime = projectEndTime-subsetEndTime;
-		print("Made projection in", seriesProjTime/1000, "sec");
 		// save as image sequence
 		print("splitting");
 
 		// note that if there is only one dimension besides C, the numbers will be sequential without identifying t or z
 		// if both t and z are present, then the slices and frames will be identified accordingly
-		//selectImage("MAX_" + basename + "-1");
-		saveName = basename + "_max_m" + padCount;
+
+		saveName = basename + "_m" + padCount;
 		print("Saving as",saveName);
 		run("Image Sequence... ", "dir=["+outputdir + File.separator+"] format=TIFF name=[" + saveName+"]");
 			
